@@ -1,341 +1,723 @@
 //*****************************************************************************************************
+//      Sports Management System
 //
-//      This program demonstrates the use of the AList class by instantiating an array-based list of 
-//      short integers and performing its methods.
+//      This program is a sport information system that implements Object Oriented Programming (OOP)
+//      concepts that allows the user to add, display, and compare different sports based on their
+//      name, date, and team information.
 //
 //      Other files required:
-//        1.	 aList.h - header file for the AList class
+//        1.  date.h - header file for Date class
+//        2.  sport.h - header file for Sport class
 //
 //*****************************************************************************************************
 
-#include "aList.h"
+#include "date.h"
+#include "sport.h"
 
+#include <iomanip>
 #include <iostream>
+#include <string>
 using namespace std;
 
 //*****************************************************************************************************
 
-void displayInserts(AList<short> &shortList);
-void displayUpdates(AList<short> &shortList);
-void displayRetrieves(AList<short> &shortList);
-void displayRemoves(AList<short> &shortList);
-void displayAList(bool success, AList<short> &shortList);
-void checkState(AList<short> &shortList);
+char getChoice();
+void processChoice(Sport s[], int size);
+void buildSport(Sport s[], int &size);
+void displayAllSports(Sport s[], int size);
+bool testName(Sport s[], int size, const string &sportName);
+void addTeam(Sport s[], int size);
+void displaySport(Sport s[], int size);
+void displaySportHighestTeams(Sport s[], int size);
 
 //*****************************************************************************************************
 
 int main() {
-    AList<short> shortList(3);
+    Sport *s = nullptr;
+    int size;
 
-    checkState(shortList);
+    cout << "=====================================================================\n"
+         << setw(44) << "Sport Information\n"
+         << "=====================================================================" << endl;
 
-    displayInserts(shortList);
-    displayUpdates(shortList);
-    displayRetrieves(shortList);
-    displayRemoves(shortList);
+    cout << "\nHow many Sports need to be processed: ";
+    cin >> size;
+
+    s = new Sport[size];
+
+    buildSport(s, size);
+    processChoice(s, size);
+
+    delete[] s;
+    s = nullptr;
 
     return 0;
 }
 
 //*****************************************************************************************************
 
-void displayInserts(AList<short> &shortList) {
-    short num;
-    int i = 0;
-    bool success;
+char getChoice() {
+    char ch;
+    bool valid;
 
-    num = 10;
-    success = shortList.insertFront(num);
-    if (success)
-        cout << "insert front: " << num << endl;
-    displayAList(success, shortList);
+    cout << "\n---------------------------------------------------------------------\n"
+         << "a) Display all Sports\n"
+         << "b) Add a team to an existing Sport\n"
+         << "c) Display a particular Sport\n"
+         << "d) Display the Sport that has the highest number of teams playing\n"
+         << "e) Exit" << endl;
 
-    num = 20;
-    success = shortList.insertAtIndex(num, i);
-    if (success)
-        cout << "insert index " << i << ": " << num << endl;
-    displayAList(success, shortList);
+    cout << "Enter Your Choice: ";
 
-    num = 30;
-    success = shortList.insertBack(num);
-    if (success)
-        cout << "insert back: " << num << endl;
-    displayAList(success, shortList);
-    
-    num = 40;
-    success = shortList.insertBack(num);
-    if (success)
-        cout << "insert back: " << num << endl;
-    displayAList(success, shortList);
+    do {
+        cin >> ch;
+        ch = tolower(ch);
 
-    num = 50;
-    success = shortList.insertBack(num);
-    if (success)
-        cout << "insert back: " << num << endl;
-    displayAList(success, shortList);
+        switch (ch) {
+            case 'a':
+            case 'b':
+            case 'c':
+            case 'd':
+            case 'e': {
+                valid = true;
+                break;
+            }
+            default: {
+                cerr << "\n\tError: Invalid Entry\n"
+                     << "Enter Your Choice: ";
+                break;
+            }
+        }
+    } while (valid == false);
+
+    return ch;
 }
 
 //*****************************************************************************************************
 
-void displayUpdates(AList<short> &shortList) {
-    short num;
-    int i = 1;
-    bool success;
+void processChoice(Sport s[], int size) {
+    char ch;
 
-    num = 1;
-    success = shortList.updateFront(num);
-    if (success)
-        cout << "\nupdate front: " << num << endl;
-    displayAList(success, shortList);
+    do {
+        ch = getChoice();
 
-    num = 2;
-    success = shortList.updateAtIndex(num, i);
-    if (success)
-        cout << "update index " << i << ": " << num << endl;
-    displayAList(success, shortList);
+        cin.ignore();
 
-    num = 4;
-    success = shortList.updateBack(num);
-    if (success)
-        cout << "update back: " << num << endl;
-    displayAList(success, shortList);
-
-    num = 30;
-    success = shortList.update(num);
-    if (success)
-        cout << "update value " << num << ": " << num << endl;
-    displayAList(success, shortList);
+        switch (ch) {
+            case 'a': {
+                displayAllSports(s, size);
+                break;
+            }
+            case 'b': {
+                addTeam(s, size);
+                break;
+            }
+            case 'c': {
+                displaySport(s, size);
+                break;
+            }
+            case 'd': {
+                displaySportHighestTeams(s, size);
+                break;
+            }
+            case 'e': {
+                break;
+            }
+            default: {
+                cerr << "\n\tError: Invalid Entry\n";
+            }
+        }
+    } while (ch != 'e');
 }
 
 //*****************************************************************************************************
 
-void displayRetrieves(AList<short> &shortList) {
-    short num;
-    int i = 2;
-    bool success;
+void buildSport(Sport s[], int &size) {
+    cin.ignore();
 
-    success = shortList.retrieveFront(num);
-    if (success)
-        cout << "\nretrieve front: " << num << endl;
-    displayAList(success, shortList);
-
-    success = shortList.retrieveBack(num); 
-    if (success)
-        cout << "retrieve back: " << num << endl;
-    displayAList(success, shortList);
-
-    success = shortList.retrieveAtIndex(num, i); 
-    if (success)
-        cout << "retrieve index " << i << ": " << num << endl;
-    displayAList(success, shortList);
-
-    success = shortList.retrieve(num);
-    if (success)
-        cout << "retrieve value " << num << ": " << num << endl;
-    displayAList(success, shortList);
+    for (int i = 0; i < size; ++i)
+        s[i].populate();
 }
 
 //*****************************************************************************************************
 
-void displayRemoves(AList<short> &shortList) {
-    short num;
-    bool success;
+void displayAllSports(Sport s[], int size) {
+    cout << "\n---------------------------------------------------------------------\n";
 
-    success = shortList.removeFront(num);
-    if (success)
-        cout << "\nremove front: " << num << endl;
-    displayAList(success, shortList);
-
-    success = shortList.removeAtIndex(num, 0);
-    if (success)
-        cout << "remove index 0: " << num << endl;
-    displayAList(success, shortList);
-
-    success = shortList.removeBack(num);
-    if (success)
-        cout << "remove back: " << num << endl;
-    displayAList(success, shortList);
-
-    num = 30;
-    success = shortList.remove(num);
-    if (success)
-        cout << "remove value " << num << ": " << num << endl;
-    displayAList(success, shortList);
-
-    num = 40;
-    success = shortList.remove(num);
-    if (success)
-        cout << "remove value " << num << ": " << num << endl;
-    displayAList(success, shortList);
-}
-
-//*****************************************************************************************************
-
-void displayAList(bool success, AList<short> &shortList) {
-    short min;
-    int cap,
-        numVal; 
-
-    if (success) {
-        shortList.display();
-        shortList.getSmallest(min);
-        cap = shortList.getCapacity();
-        numVal = shortList.getNumValues();
-
-        if (numVal > 0)
-            cout << "capacity: " << cap 
-                 << "\tnumVal: " << numVal 
-                 << "\tsmallest: " << min << endl;
-        else
-            cout << "capacity: " << cap 
-                 << "\tnumValues: " << numVal << endl;
-
-        cout << endl;
+    for (int i = 0; i < size; ++i) {
+        cout << "\n\tSport " << i + 1 << endl;
+        s[i].display();
     }
-    
-    checkState(shortList);
 }
 
 //*****************************************************************************************************
 
-void checkState(AList<short> &shortList) {
-    if (shortList.isFull())
-        cerr << "list is full\n\n";
-    else if (shortList.isEmpty())
-        cerr << "list is empty\n\n";
+bool testName(Sport s[], int size, const string &sportName) {
+    bool nameFound = false;
+
+    for (int i = 0; i < size; ++i) {
+        if (sportName == s[i].getName()) {
+            nameFound = true;
+            break;
+        }
+    }
+
+    return nameFound;
+}
+
+//*****************************************************************************************************
+
+void addTeam(Sport s[], int size) {
+    string team,
+        sportAdd;
+    bool addTest;
+    char entry;
+
+    do {
+        cout << "\nEnter Sport Name to add Team: ";
+        getline(cin, sportAdd);
+
+        addTest = testName(s, size, sportAdd);
+
+        if (addTest == true) {
+            cout << "\nEnter Team Name: ";
+            getline(cin, team);
+
+            for (int i = 0; i < size; ++i)
+                if (sportAdd == s[i].getName())
+                    s[i].addTeam(team);
+        } else {
+            cerr << "\n\tInvalid Name\n";
+            cout << "\nBack to menu? (Y/N)" << endl;
+            cin >> entry;
+
+            entry = tolower(entry);
+
+            if (entry == 'y')
+                break;
+            else
+                cin.ignore();
+        }
+    } while (addTest == false);
+}
+
+//*****************************************************************************************************
+
+void displaySport(Sport s[], int size) {
+    string s1;
+    bool s1Test;
+    char entry;
+
+    do {
+        cout << "\nEnter Sport Name to Display: ";
+        getline(cin, s1);
+
+        s1Test = testName(s, size, s1);
+
+        if (s1Test == true) {
+            for (int i = 0; i < size; ++i) {
+                if (s1 == s[i].getName()) {
+                    cout << "\n\tSport " << i + 1 << endl;
+                    s[i].display();
+                }
+            }
+        } else {
+            cerr << "\n\tInvalid Name\n";
+            cout << "\nBack to menu? (Y/N)" << endl;
+            cin >> entry;
+
+            if (entry == 'Y' || entry == 'y')
+                break;
+            else
+                cin.ignore();
+        }
+    } while (s1Test == false);
+}
+
+//*****************************************************************************************************
+
+void displaySportHighestTeams(Sport s[], int size) {
+    int temp = s[0].getNumTeams();
+    int max = 0;
+
+    for (int i = 1; i < size; ++i) {
+        if (temp < s[i].getNumTeams()) {
+            temp = s[i].getNumTeams();
+            max = i;
+        }
+    }
+
+    for (int i = 0; i < size; ++i) {
+        if (s[max].getNumTeams() == s[i].getNumTeams()) {
+            cout << "\n\tSport " << i + 1 << endl;
+            s[i].display();
+        }
+    }
 }
 
 //*****************************************************************************************************
 /*
 
-list is empty
+=====================================================================
+                          Sport Information
+=====================================================================
 
-insert front: 10
-[0]  10
-capacity: 3     numVal: 1       smallest: 10
+How many Sports need to be processed: 3
 
-insert index 0: 20
-[0]  20
-[1]  10
-capacity: 3     numVal: 2       smallest: 10
+Enter the name of the sport: Baseball
+Sport has a scheduled game? (Y/N)
+Y
 
-insert back: 30
-[0]  20
-[1]  10
-[2]  30
-capacity: 3     numVal: 3       smallest: 10
+Next Scheduled Game
+Enter Year: 2022
+Enter Month: 7
+Enter Day: 8
 
-list is full
+Enter the number of teams: 2
+Enter the name of team 1: Cardinals
+Enter the name of team 2: Cubs
 
-insert back: 40
-[0]  20
-[1]  10
-[2]  30
-[3]  40
-capacity: 4     numVal: 4       smallest: 10
+Enter the name of the sport: Hockey
+Sport has a scheduled game? (Y/N)
+Y
+Next Scheduled Game
+Enter Year: 1901
 
-list is full
+Invalid
 
-insert back: 50
-[0]  20
-[1]  10
-[2]  30
-[3]  40
-[4]  50
-capacity: 6     numVal: 5       smallest: 10
+Enter Year(2022- ): 2024                                                      Leap Year
+Enter Month: 15
+
+Invalid
+
+Enter Month(1-12): 2
+Enter Day: -13
+
+Invalid
+
+Enter Day(1-29): 29
+
+Enter the number of teams: 3
+Enter the name of team 1: Blues
+Enter the name of team 2: Penguins
+Enter the name of team 3: Red Wings
+
+Enter the name of the sport: Football
+Sport has a scheduled game? (Y/N)
+N
+
+Default date will be set to January 1, 2000.
+
+Enter the number of teams: 2
+Enter the name of team 1: Rams
+Enter the name of team 2: Patriots
+
+---------------------------------------------------------------------
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: a
+
+---------------------------------------------------------------------       Display all Sports
+
+        Sport 1
+                Sport Name ................... Baseball
+                Scheduled Date (M/D/YY) ...... 7/8/2022
+
+                Number of Teams .............. 2
+                Team 1 ....................... Cardinals
+                Team 2 ....................... Cubs
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 3
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+
+        Sport 3
+                Sport Name ................... Football
+                Scheduled Date (M/D/YY) ...... 1/1/2000
+
+                Number of Teams .............. 2
+                Team 1 ....................... Rams
+                Team 2 ....................... Patriots
+
+---------------------------------------------------------------------       Display highest number
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: d
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 3
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+
+---------------------------------------------------------------------       Display particular Sport
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: c
+
+Enter Sport Name to Display: Baseball
+
+        Sport 1
+                Sport Name ................... Baseball
+                Scheduled Date (M/D/YY) ...... 7/8/2022
+
+                Number of Teams .............. 2
+                Team 1 ....................... Cardinals
+                Team 2 ....................... Cubs
+
+---------------------------------------------------------------------       Display particular Sport
+a) Display all Sports                                                       Invalid Name / back to menu (N)
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: c
+
+Enter Sport Name to Display: Soccer
+
+        Invalid Name
+
+Back to menu? (Y/N)
+N
+
+Enter Sport Name to Display: Football
+
+        Sport 3
+                Sport Name ................... Football
+                Scheduled Date (M/D/YY) ...... 1/1/2000
+
+                Number of Teams .............. 2
+                Team 1 ....................... Rams
+                Team 2 ....................... Patriots
+
+---------------------------------------------------------------------       Display particular Sport
+a) Display all Sports                                                       Invalid Name / back to menu (Y)
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: c
+
+Enter Sport Name to Display: Soccer
+
+        Invalid Name
+
+Back to menu? (Y/N)
+Y
+
+---------------------------------------------------------------------       Add team
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: b
+
+Enter Sport Name to add Team: Baseball
+
+Enter Team Name: Yankees
+
+---------------------------------------------------------------------
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: a
+
+---------------------------------------------------------------------      Display all Sports
+
+        Sport 1
+                Sport Name ................... Baseball
+                Scheduled Date (M/D/YY) ...... 7/8/2022
+
+                Number of Teams .............. 3
+                Team 1 ....................... Cardinals
+                Team 2 ....................... Cubs
+                Team 3 ....................... Yankees
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 3
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+
+        Sport 3
+                Sport Name ................... Football
+                Scheduled Date (M/D/YY) ...... 1/1/2000
+
+                Number of Teams .............. 2
+                Team 1 ....................... Rams
+                Team 2 ....................... Patriots
+
+---------------------------------------------------------------------       Display multiple highest numbers
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: d
+
+        Sport 1
+                Sport Name ................... Baseball
+                Scheduled Date (M/D/YY) ...... 7/8/2022
+
+                Number of Teams .............. 3
+                Team 1 ....................... Cardinals
+                Team 2 ....................... Cubs
+                Team 3 ....................... Yankees
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 3
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+
+---------------------------------------------------------------------      Invalid Choice
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: w
+
+        Invalid Choice
+
+---------------------------------------------------------------------       Add team
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: b
+
+Enter Sport Name to add Team: Hockey
+
+Enter Team Name: Stars
+
+---------------------------------------------------------------------       Display highest number
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: d
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 4
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+                Team 4 ....................... Stars
+
+---------------------------------------------------------------------       Add team
+a) Display all Sports                                                       Invalid Name / back to menu (Y)
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: b
+
+Enter Sport Name to add Team: Soccer
+
+        Invalid Name
+
+Back to menu? (Y/N)
+Y
+
+---------------------------------------------------------------------     Add Team
+a) Display all Sports                                                     Invalid Name / back to menu (N)
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: b
+
+Enter Sport Name to add Team: Soccer
+
+        Invalid Name
+
+Back to menu? (Y/N)
+N
+
+Enter Sport Name to add Team: Baseball
+
+Enter Team Name: Red Sox
+
+---------------------------------------------------------------------        Display all Sports
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: a
+
+---------------------------------------------------------------------
+
+        Sport 1
+                Sport Name ................... Baseball
+                Scheduled Date (M/D/YY) ...... 7/8/2022
+
+                Number of Teams .............. 4
+                Team 1 ....................... Cardinals
+                Team 2 ....................... Cubs
+                Team 3 ....................... Yankees
+                Team 4 ....................... Red Sox
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 4
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+                Team 4 ....................... Stars
+
+        Sport 3
+                Sport Name ................... Football
+                Scheduled Date (M/D/YY) ...... 1/1/2000
+
+                Number of Teams .............. 2
+                Team 1 ....................... Rams
+                Team 2 ....................... Patriots
+
+---------------------------------------------------------------------       Display multiple highest numbers
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: d
+
+        Sport 1
+                Sport Name ................... Baseball
+                Scheduled Date (M/D/YY) ...... 7/8/2022
+
+                Number of Teams .............. 4
+                Team 1 ....................... Cardinals
+                Team 2 ....................... Cubs
+                Team 3 ....................... Yankees
+                Team 4 ....................... Red Sox
+
+        Sport 2
+                Sport Name ................... Hockey
+                Scheduled Date (M/D/YY) ...... 2/29/2024
+
+                Number of Teams .............. 4
+                Team 1 ....................... Blues
+                Team 2 ....................... Penguins
+                Team 3 ....................... Red Wings
+                Team 4 ....................... Stars
+
+---------------------------------------------------------------------       Exit
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: e
 
 
-update front: 1
-[0]  1
-[1]  10
-[2]  30
-[3]  40
-[4]  50
-capacity: 6     numVal: 5       smallest: 1
-
-update index 1: 2
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  50
-capacity: 6     numVal: 5       smallest: 1
-
-update back: 4
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  4
-capacity: 6     numVal: 5       smallest: 1
-
-update value 30: 30
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  4
-capacity: 6     numVal: 5       smallest: 1
+*****************************************************************************************************
 
 
-retrieve front: 1
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  4
-capacity: 6     numVal: 5       smallest: 1
+=====================================================================
+                          Sport Information
+=====================================================================
 
-retrieve back: 4
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  4
-capacity: 6     numVal: 5       smallest: 1
+How many Sports need to be processed: 2
 
-retrieve index 2: 30
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  4
-capacity: 6     numVal: 5       smallest: 1
+Enter the name of the sport: test
+Sport has a scheduled game? (Y/N)
+n
 
-retrieve value 30: 30
-[0]  1
-[1]  2
-[2]  30
-[3]  40
-[4]  4
-capacity: 6     numVal: 5       smallest: 1
+Default date will be set to January 1, 2000.
 
+Enter the number of teams: 2
+Enter the name of team 1: test
+Enter the name of team 2: test
 
-remove front: 1
-[0]  2
-[1]  30
-[2]  40
-[3]  4
-capacity: 6     numVal: 4       smallest: 2
+Enter the name of the sport: test
+Sport has a scheduled game? (Y/N)
+n
 
-remove index 0: 2
-[0]  30
-[1]  40
-[2]  4
-capacity: 6     numVal: 3       smallest: 4
+Default date will be set to January 1, 2000.
 
-remove back: 4
-[0]  30
-[1]  40
-capacity: 6     numVal: 2       smallest: 30
+Enter the number of teams: 2
+Enter the name of team 1: test
+Enter the name of team 2: test
 
-remove value 30: 30
-[0]  40
-capacity: 6     numVal: 1       smallest: 40
+---------------------------------------------------------------------
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: a
 
-remove value 40: 40
-capacity: 6     numValues: 0
+---------------------------------------------------------------------
 
-list is empty
+        Sport 1
+                Sport Name ................... test
+                Scheduled Date (M/D/YY) ...... 1/1/2000
+
+                Number of Teams .............. 2
+                Team 1 ....................... test
+                Team 2 ....................... test
+
+Date object destroyed                                                  destructor called
+
+        Sport 2
+                Sport Name ................... test
+                Scheduled Date (M/D/YY) ...... 1/1/2000
+
+                Number of Teams .............. 2
+                Team 1 ....................... test
+                Team 2 ....................... test
+
+Date object destroyed
+
+---------------------------------------------------------------------
+a) Display all Sports
+b) Add a team to an existing Sport
+c) Display a particular Sport
+d) Display the Sport that has the highest number of teams playing
+e) Exit
+Enter Your Choice: e
+
+Sport object destroyed                                                 destructor called
+
+Date object destroyed
+
+Sport object destroyed
+
+Date object destroyed
 
 */
