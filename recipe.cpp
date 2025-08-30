@@ -1,14 +1,8 @@
-//*****************************************************************************************************
-//      Chocolate Chip Cookies Recipe
-//
-//      This program is a simple recipe for making Chocolate Chip Cookies.
-//
-//*****************************************************************************************************
+
 
 #include <iostream>
 using namespace std;
 
-//*****************************************************************************************************
 
 int main() {
     cout << "Chocolate Chip Cookies - 4 dozen cookies" << endl;
