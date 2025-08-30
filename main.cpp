@@ -1,6 +1,3 @@
-// Autor : Nemonet TYP
-// Title: Encryption and Decryption project in C++
-// PROJECT FOR C/C++ PROGRAMMING TUTORIAL
 
 
 #include <iostream>
