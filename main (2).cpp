@@ -1,15 +1,4 @@
-//*****************************************************************************************************
-//      Sports Management System
-//
-//      This program is a sport information system that implements Object Oriented Programming (OOP)
-//      concepts that allows the user to add, display, and compare different sports based on their
-//      name, date, and team information.
-//
-//      Other files required:
-//        1.  date.h - header file for Date class
-//        2.  sport.h - header file for Sport class
-//
-//*****************************************************************************************************
+
 
 #include "date.h"
 #include "sport.h"
