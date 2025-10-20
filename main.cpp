@@ -1,42 +1,109 @@
-
-
-#include <iostream>
-using namespace std;
+#include "Header.h"
 
 int main()
 {
-   int i, x;
-   char str[100];
+	srand(time(0));
+	::available = rand() % 200000;
+	MainMenu();
 
-   cout << "Please enter a string:\t";
-   cin >> str;
+	system("color 9E");
+	system("pause");
+	return 0;
+}
 
-   cout << "\nPlease choose following options:\n";
-   cout << "1 = Encrypt the string.\n";
-   cout << "2 = Decrypt the string.\n";
-   cin >> x;
+void MainMenu()
+{
+	system("color 9E");
+	char num;
+	char choice;
+	do
+	{
 
-   //using switch case statements
-   switch(x)
-   {
-      //first case for encrypting a string
-      case 1:
-         for(i = 0; (i < 100 && str[i] != '\0'); i++)
-            str[i] = str[i] + 2; //the key for encryption is 3 that is added to ASCII value
+		bool checked = false;
+		string checkName, checkPassword;
+		accounts data;
+		accounts oldData[50];
+		cout << "\n          Choose what you want:";
+		cout << "\n          1.Sign in";
+		cout << "\n          2.Registration";
+		cout << "\n          3.Exit";
+		cout << "\n          ";
+		choice = _getch();
+		switch (choice)
+		{
+		case 49:
+			outData(oldData);
+			system("CLS");
+			cout << "\n          Please enter your name:";
+			cout << "\n          ";
+			cin >> checkName;
+			cout << "\n          Please enter your password:";
+			cout << "\n          ";
+			cin >> checkPassword;
+			for (int i = 0; i < ::increaments; i++)
+			{
 
-         cout << "\nEncrypted string: " << str << endl;
-         break;
+				if (oldData[i].name == checkName && oldData[i].password == checkPassword)
+				{
+					::accountNum = i;
+					::balance = oldData[i].balance;
+					::borrow = oldData[i].borrowed;
+					checked = true;
+				}
+			}
+			if (checked)
+			{
+				do
+				{
+					system("CLS");
+					cout << "\n          Hello " << oldData[::accountNum].name << endl;
+					cout << "\n          What would you like to do?" << endl;
+					cout << "\n          1.Actions with card" << endl;
+					cout << "\n          2.Check balance" << endl;
+					cout << "\n          0.Exit" << endl;
+					num = _getch();
+					switch (num)
+					{
+					case 48:
+						break;
+					case 49:
+						Menu(oldData);
+						break;
+					case 50:
+						CheckBalance();
+						break;
+					default:
+						cout << "\n          Error! Section not found. Please try one more time." << endl
+							 << endl;
+						system("pause");
+						break;
+					}
 
-      //second case for decrypting a string
-      case 2:
-         for(i = 0; (i < 100 && str[i] != '\0'); i++)
-         str[i] = str[i] - 2; //the key for encryption is 3 that is subtracted to ASCII value
+				} while (num != '0');
+			}
+			else
+				cout << "\n          Wrong name or password\n";
+			break;
+		case 50:
+			system("CLS");
+			cout << "\n          Input your name without space";
+			cout << "\n          ";
+			cin >> data.name;
+			cout << "\n          Input your password without space";
+			cout << "\n          ";
+			cin >> data.password;
+			data.balance = 0;
+			data.borrowed = 0;
+			inputNewData(data);
+			break;
+		case 51:
+			break;
+		default:
+			cout << "\n          There is no such section";
+			cout << "\n          Please try one more time";
+			break;
+		}
+	} while (choice != 51);
 
-      cout << "\nDecrypted string: " << str << endl;
-      break;
-
-      default:
-         cout << "\nInvalid Input !!!\n";
-   }
-   return 0;
+	cout << "\n          ";
 }
