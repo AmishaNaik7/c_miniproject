@@ -1,257 +1,109 @@
-#include <iostream>
-#include <string>
-#include <conio.h>
-#include <time.h>
-#include <Windows.h>
-using namespace std;
-
-double b;
-double h; // global variables for base and height
-
-// Functions for Main Menus
-void F_First();
-void F_Second();
-
-// Base Class
-class Shape
-{ // Abstract class
-protected:
-	double base;
-	double height;
-
-public:
-	void get_data(double base, double height)
-	{
-		this->base = base;
-		this->height = height;
-	}
-	void virtual display_area() = 0; // pure virtual function
-};
-
-// Triangle class to calculate the area of triangle
-class Triangle : public Shape
-{
-public:
-	void display_area()
-	{
-		cout << "Area of triangle: " << 0.5 * base * height << endl;
-	}
-};
-
-// Rectangle class to calculate the area of rectangle
-class Rectanglee : public Shape
-{
-public:
-	void display_area()
-	{
-		cout << "Area of Rectangle: " << base * height << endl;
-	}
-};
-
-class Circle : public Shape
-{
-public:
-	void display_area()
-	{
-		cout << "Area of Circle: " << base * base * 3.1415 << endl;
-	}
-};
+#include "Header.h"
 
 int main()
 {
-	for (int k = 0; k < 1000; k++)
-	{
-		system("cls");
-		cout << "       M A I N  M E N U\n"
-			 << "-------------------------------\n"
-			 << "1. First program\n"
-			 << "2. Second program\n"
-			 << "0. Exit\n"
-			 << "-------------------------------\n"
-			 << "Your choice: \n";
-		switch (_getch())
-		{
-			// First program
-		case 49:
-			F_First();
-			break;
-			// second program
-		case 50:
-			F_Second();
-			break;
-		default:
-			cout << "     Your choice is not available in Menu.\n     Please, enter one more time.\n";
-			Sleep(0700);
-			Sleep(0700);
-			break;
-		case 48:
-			return 0;
-			break;
-		} // Switch
-	}	  // For loop
+	srand(time(0));
+	::available = rand() % 200000;
+	MainMenu();
+
+	system("color 9E");
 	system("pause");
+	return 0;
 }
 
-void F_First()
+void MainMenu()
 {
-	for (int k = 0; k < 1000; k++)
+	system("color 9E");
+	char num;
+	char choice;
+	do
 	{
-		system("cls");
-		cout << "      C A L C U L A T I N G  A R E A S\n"
-			 << "-------------------------------------------\n"
-			 << "1. Triangle\n"
-			 << "2. Rectangle\n"
-			 << "0. Back\n"
-			 << "Your choice: \n";
-		switch (_getch())
-		{
-			// Case to Exit from the program
-		case 48:
-		{
-			system("cls");
-			main();
-		}
-		break;
 
-			// First program
+		bool checked = false;
+		string checkName, checkPassword;
+		accounts data;
+		accounts oldData[50];
+		cout << "\n          Choose what you want:";
+		cout << "\n          1.Sign in";
+		cout << "\n          2.Registration";
+		cout << "\n          3.Exit";
+		cout << "\n          ";
+		choice = _getch();
+		switch (choice)
+		{
 		case 49:
-		{
-			system("cls");
-			cout << "       T R I A N G L E \n";
-			cout << "----------------------------------\n";
-			Shape *shape; //
-			Triangle triangle;
-			shape = &triangle; // overriding functions for triangle
-			cout << "Enter the base: ";
-			cin >> b;
-			cout << "Entet the height: ";
-			cin >> h;
-			shape->get_data(b, h);
-			shape->display_area();
-			cout << "-----------------------------------\n\n";
-			system("pause");
-		}
-		break;
+			outData(oldData);
+			system("CLS");
+			cout << "\n          Please enter your name:";
+			cout << "\n          ";
+			cin >> checkName;
+			cout << "\n          Please enter your password:";
+			cout << "\n          ";
+			cin >> checkPassword;
+			for (int i = 0; i < ::increaments; i++)
+			{
 
-			// second program
+				if (oldData[i].name == checkName && oldData[i].password == checkPassword)
+				{
+					::accountNum = i;
+					::balance = oldData[i].balance;
+					::borrow = oldData[i].borrowed;
+					checked = true;
+				}
+			}
+			if (checked)
+			{
+				do
+				{
+					system("CLS");
+					cout << "\n          Hello " << oldData[::accountNum].name << endl;
+					cout << "\n          What would you like to do?" << endl;
+					cout << "\n          1.Actions with card" << endl;
+					cout << "\n          2.Check balance" << endl;
+					cout << "\n          0.Exit" << endl;
+					num = _getch();
+					switch (num)
+					{
+					case 48:
+						break;
+					case 49:
+						Menu(oldData);
+						break;
+					case 50:
+						CheckBalance();
+						break;
+					default:
+						cout << "\n          Error! Section not found. Please try one more time." << endl
+							 << endl;
+						system("pause");
+						break;
+					}
+
+				} while (num != '0');
+			}
+			else
+				cout << "\n          Wrong name or password\n";
+			break;
 		case 50:
-		{
-			system("cls");
-			cout << "      R E C T A N G L E \n";
-			cout << "----------------------------------\n";
-			Shape *shape; //
-			Rectanglee rectangle;
-			shape = &rectangle;
-			cout << "Enter the base: ";
-			cin >> b;
-			cout << "Entet the height: ";
-			cin >> h;
-			shape->get_data(b, h);
-			shape->display_area();
-			cout << "------------------------------------\n\n";
-			system("pause");
-		}
-		break;
-
-		default:
-		{
-			cout << "Your choice is not available in Menu.\nPlease, enter one more time.\n";
-			Sleep(0700);
-			Sleep(0700);
-		}
-		break;
-		} // Switch
-	}	  // For loop
-	system("pause");
-}
-
-void F_Second()
-{
-	for (int k = 0; k < 1000; k++)
-	{
-		system("cls");
-		cout << "      S E C O N D  P R O G R A M\n"
-			 << "-------------------------------------\n"
-			 << "1. Triangle\n"
-			 << "2. Rectangle\n"
-			 << "3. Circle\n"
-			 << "0. Back\n"
-			 << "Your choice: \n";
-		switch (_getch())
-		{
-			// Case to Exit from the program
-		case 48:
-		{
-			system("cls");
-			main();
-		}
-		break;
-
-			// First program
-		case 49:
-		{
-			system("cls");
-			cout << "       T R I A N G L E \n";
-			cout << "----------------------------------\n";
-			Shape *shape; //
-			Triangle triangle;
-			shape = &triangle; // overriding functions for triangle
-			cout << "Enter the base: ";
-			cin >> b;
-			cout << "Entet the height: ";
-			cin >> h;
-			shape->get_data(b, h);
-			shape->display_area();
-			cout << "-----------------------------------\n\n";
-			system("pause");
-		}
-		break;
-
-			// second program
-		case 50:
-		{
-			system("cls");
-			cout << "      R E C T A N G L E \n";
-			cout << "----------------------------------\n";
-			Shape *shape; //
-			Rectanglee rectangle;
-			shape = &rectangle;
-			cout << "Enter the base: ";
-			cin >> b;
-			cout << "Entet the height: ";
-			cin >> h;
-			shape->get_data(b, h);
-			shape->display_area();
-			cout << "------------------------------------\n\n";
-			system("pause");
-		}
-		break;
-			// Third program
+			system("CLS");
+			cout << "\n          Input your name without space";
+			cout << "\n          ";
+			cin >> data.name;
+			cout << "\n          Input your password without space";
+			cout << "\n          ";
+			cin >> data.password;
+			data.balance = 0;
+			data.borrowed = 0;
+			inputNewData(data);
+			break;
 		case 51:
-		{
-			system("cls");
-			cout << "         C I R C L E \n";
-			cout << "----------------------------------\n";
-			Shape *shape; //
-			Circle circle1;
-			shape = &circle1;
-			cout << "Enter the radius: ";
-			cin >> b;
-			shape->get_data(b, 0.0);
-			shape->display_area();
-			cout << "------------------------------------\n\n";
-			system("pause");
-		}
-		break;
-
+			break;
 		default:
-		{
-			cout << "Your choice is not available in Menu.\nPlease, enter one more time.\n";
-			Sleep(0700);
-			Sleep(0700);
+			cout << "\n          There is no such section";
+			cout << "\n          Please try one more time";
+			break;
 		}
-		break;
-		} // Switch
-	}	  // For loop
-	system("pause");
+	} while (choice != 51);
+
+	cout << "\n          ";
 }
